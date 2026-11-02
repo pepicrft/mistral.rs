@@ -15,6 +15,7 @@ Run from the repo root or the docs directory.
 from __future__ import annotations
 
 import ast
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -82,7 +83,8 @@ def _render_page(
         )
 
     code = src.read_text().rstrip("\n")
-    fence = "````" if "```" in code else "```"
+    longest_run = max((len(run) for run in re.findall(r"`+", code)), default=0)
+    fence = "`" * max(3, longest_run + 1)
 
     return "\n".join(
         [
